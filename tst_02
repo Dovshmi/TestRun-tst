@@ -1,0 +1,34 @@
+#!/bin/bash
+
+echo " "
+echo "Starting Test Run V 0.2"
+for i in "$@"; do
+
+	case "$i" in
+	-h)
+		echo "Help Menu"
+		exit
+		;;
+	-v)
+		echo "Version 0.2"
+		exit
+		;;
+	*) ;;
+	esac
+done
+
+echo " "
+echo "-----------------------------------------"
+echo "File : $1"
+echo "Location : $(pwd)"
+echo "User : $(whoami)"
+LAN=$(echo "$1" | cut -d '.' -f2)
+if [[ -n "$LAN" ]]; then
+	echo "Language : $LAN"
+fi
+echo "-----------------------------------------"
+echo " "
+echo "TestRun@$1"
+echo " "
+echo $1 | entr ./$1
+#heloo

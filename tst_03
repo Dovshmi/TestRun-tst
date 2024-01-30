@@ -1,0 +1,82 @@
+#!/bin/bash
+#######################################################################
+# Script: tst.sh
+# Description: A script for test running BASH scripts in directory or file mode.
+# Version: 0.3
+# Author: Dovshmi aka Shmidov
+# Date: January 30, 2024
+#######################################################################
+
+# Variables for the last user argument
+TOTAL=$#
+LAST="${!TOTAL}"
+
+display_help() {
+	echo "Usage: $0 [options] script"
+	echo "Options:"
+	echo "  -h, --help  Display this help menu"
+	echo "  -v          Display version information"
+	echo "  -d, -dir , --dir   Directory mode"
+	echo ""
+	echo "If in directory mode:"
+	echo "  script      The script to execute when files change"
+	echo ""
+	echo "If in file mode:"
+	echo "  script      The script to execute when the file changes"
+}
+
+directory_mode() {
+	echo "Directory Mode"
+	DIR=$(ls $(pwd) | tr '\n' ' ')
+	echo "File : $LAST"
+	echo "Files Hooked : $DIR"
+	echo "Location : $(pwd)"
+	echo "User : $(whoami)"
+	echo "-----------------------------------------"
+	echo " "
+	echo "TestRun@ /$(basename "$(pwd)")"
+	echo " "
+	ls * | entr "./$LAST"
+}
+
+file_mode() {
+	echo "File Mode"
+	echo "File : $LAST"
+	echo "Location : $(pwd)"
+	echo "User : $(whoami)"
+	LAN=$(echo "$LAST" | cut -d '.' -f2)
+	if [[ -n "$LAN" ]]; then
+		echo "Language : $LAN"
+	fi
+	echo "-----------------------------------------"
+	echo " "
+	echo "TestRun@ $LAST"
+	echo " "
+	echo "$LAST" | entr "./$LAST"
+}
+
+# Start of the script
+echo " "
+echo "Starting Test Run V 0.3"
+echo " "
+echo "-----------------------------------------"
+
+for i in "$@"; do
+	case "$i" in
+	-h | --help)
+		display_help
+		exit
+		;;
+	-v)
+		echo "Version 0.3"
+		exit
+		;;
+	-d | -dir | --dir)
+		directory_mode
+		exit
+		;;
+	*) ;;
+	esac
+done
+
+file_mode

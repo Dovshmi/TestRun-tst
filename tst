@@ -22,4 +22,4 @@ echo " "
 echo "TestRun@$1"
 echo " "
 echo $1 | entr ./$1
-#heloo0000000
+#heloo

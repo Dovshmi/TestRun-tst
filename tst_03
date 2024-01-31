@@ -79,4 +79,9 @@ for i in "$@"; do
 	esac
 done
 
-file_mode
+if [ $TOTAL -eq 0 ]; then
+	display_help
+	exit
+else
+	file_mode
+fi
